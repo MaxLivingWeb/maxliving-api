@@ -40,11 +40,14 @@
     "morgan": "^1.10.0",
     "multer": "^1.4.2",
     "mysql2": "^2.2.5",
+    "node-cache": "^5.1.2",
     "node-cron": "^2.0.3",
     "nonce": "^1.0.4",
     "request": "^2.88.2",
     "request-promise": "^4.2.6",
+    "request-promise-native": "^1.0.9",
     "sequelize": "^6.3.5",
-    "serve-favicon": "^2.5.0"
+    "serve-favicon": "^2.5.0",
+    "xml2js": "^0.4.23"
   }
 }

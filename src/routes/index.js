@@ -31,6 +31,10 @@ router.get('/test', async (req, res) => {
   res.send(responseData);
 });
 
+
+router.use('/hubspot', require('./hubspot'));
+router.use('/webhook', require('./webhook'));
+
 router.use('/status', require('./status'));
 
 module.exports = router;

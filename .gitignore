@@ -107,3 +107,5 @@ package-lock.json
 
 /caches/*.json
 /db/*.json
+
+.DS_Store
