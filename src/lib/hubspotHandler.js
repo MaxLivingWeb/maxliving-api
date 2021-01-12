@@ -4,7 +4,7 @@ const {
   HUBSPOT_CLIENT_SECRET,
   HUBSPOT_REDIRECT_URI
 } = require('./config');
-const helper = require('../lib/helper');
+const helper = require('./helper');
 
 const request = require('request-promise-native');
 const NodeCache = require('node-cache');

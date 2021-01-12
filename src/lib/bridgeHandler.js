@@ -1,6 +1,8 @@
 const {
+  HUBSPOT_API_KEY,
+  DOCEBO_BASE_URL,
 } = require('./config');
-const helper = require('../lib/helper');
+const helper = require('./helper');
 
 const request = require('request-promise-native');
 const querystring = require('querystring');
@@ -46,6 +48,74 @@ class bridgeHandler {
           resolveData = await hubspotHandler.updateCertificates(payload.payload.user_id, certificateID, payload.payload.completion_date);
         }
         resolve(resolveData);
+      } catch(e) {
+        reject(e);
+      }
+    });
+  }
+
+  migrate_docebo_user_ids_to_hubspot () {
+    return new Promise(async (resolve, reject) => {
+      try {
+        resolve();
+
+        const tokenResponse = await doceboHandler.get_access_token();
+        let page = 1;
+        let page_size = 10;
+        while (1) {
+          const response = await helper.do_request({
+            method: 'GET',
+            url: `${DOCEBO_BASE_URL}/manage/v1/user`,
+            qs: {
+              page,
+              page_size,
+            },
+            headers: {
+              'Authorization': 'Bearer ' + tokenResponse.access_token,
+              'Content-Type': 'application/json',
+            },
+          });
+
+          console.log(`Page ${page} ----------------------------`);
+          console.log(response.data.items.map(item => ([item.user_id, item.email])));
+
+          const batchReadResponse = await helper.do_request({
+            method: 'POST',
+            url: 'https://api.hubapi.com/crm/v3/objects/contacts/batch/read',
+            qs: {hapikey: HUBSPOT_API_KEY},
+            headers: {accept: 'application/json', 'content-type': 'application/json'},
+            body: {
+              inputs: response.data.items.map(item => ({id: item.email})),
+              properties: ['email'],
+              idProperty: 'email'
+            },
+            json: true
+          });
+
+          // console.log(batchReadResponse);
+
+          const batchUpdateResponse = await helper.do_request({
+            method: 'POST',
+            url: 'https://api.hubapi.com/crm/v3/objects/contacts/batch/update',
+            qs: {hapikey: HUBSPOT_API_KEY},
+            headers: {accept: 'application/json', 'content-type': 'application/json'},
+            body: {
+              inputs: response.data.items.map(item => ({
+                id: helper.getSafe(() => batchReadResponse.results.find(c => c.properties.email == item.email).id, item.email),
+                properties: {
+                  docebo_user_id: item.user_id
+                }
+              }))
+            },
+            json: true
+          });
+
+          // console.log(batchUpdateResponse);
+
+          if (!response.data.has_more_data) break;
+          page ++;
+        }
+
       } catch(e) {
         reject(e);
       }

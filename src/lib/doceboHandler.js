@@ -7,7 +7,7 @@ const {
   DOCEBO_ADMIN_PASSWORD,
   DOCEBO_CERTIFICATES,
 } = require('./config');
-const helper = require('../lib/helper');
+const helper = require('./helper');
 
 const request = require('request');
 const querystring = require('querystring');
@@ -56,7 +56,7 @@ class doceboHandler {
     return new Promise(async (resolve, reject) => {
       try {
         if (!access_token) {
-          const tokenResponse =  await this.get_access_token();
+          const tokenResponse = await this.get_access_token();
           access_token = tokenResponse.access_token;
         }
 
@@ -81,7 +81,7 @@ class doceboHandler {
   user_create_from_hubspot ({email, first_name, last_name, type, contact_type, contact_subtypes, coach_name, owner_email}) {
     return new Promise(async (resolve, reject) => {
       try {
-        const tokenResponse =  await this.get_access_token();
+        const tokenResponse = await this.get_access_token();
 
         const params = {
           "userid": email,
@@ -165,7 +165,7 @@ class doceboHandler {
   change_status (user_id, status = 1) {
     return new Promise(async (resolve, reject) => {
       try {
-        const tokenResponse =  await this.get_access_token();
+        const tokenResponse = await this.get_access_token();
         const params = {
           "user_ids": [user_id],
           "status": status,
@@ -190,7 +190,7 @@ class doceboHandler {
   update_user (user_id, {first_name, last_name, type, contact_type, contact_subtypes, coach_name, owner_email}) {
     return new Promise(async (resolve, reject) => {
       try {
-        const tokenResponse =  await this.get_access_token();
+        const tokenResponse = await this.get_access_token();
 
         const params = {
           "firstname": first_name,
@@ -276,7 +276,7 @@ class doceboHandler {
     return new Promise(async (resolve, reject) => {
       try {
         if (!access_token) {
-          const tokenResponse =  await this.get_access_token();
+          const tokenResponse = await this.get_access_token();
           access_token = tokenResponse.access_token;
         }
 
@@ -303,7 +303,7 @@ class doceboHandler {
     return new Promise(async (resolve, reject) => {
       try {
         if (!access_token) {
-          const tokenResponse =  await this.get_access_token();
+          const tokenResponse = await this.get_access_token();
           access_token = tokenResponse.access_token;
         }
 
@@ -330,7 +330,7 @@ class doceboHandler {
     return new Promise(async (resolve, reject) => {
       try {
         if (!access_token) {
-          const tokenResponse =  await this.get_access_token();
+          const tokenResponse = await this.get_access_token();
           access_token = tokenResponse.access_token;
         }
 
@@ -357,7 +357,7 @@ class doceboHandler {
     return new Promise(async (resolve, reject) => {
       try {
         if (!access_token) {
-          const tokenResponse =  await this.get_access_token();
+          const tokenResponse = await this.get_access_token();
           access_token = tokenResponse.access_token;
         }
 
@@ -384,7 +384,7 @@ class doceboHandler {
     return new Promise(async (resolve, reject) => {
       try {
         if (!access_token) {
-          const tokenResponse =  await this.get_access_token();
+          const tokenResponse = await this.get_access_token();
           access_token = tokenResponse.access_token;
         }
 
@@ -427,7 +427,7 @@ class doceboHandler {
             }
 
             try {
-              const tokenResponse =  await this.get_access_token();
+              const tokenResponse = await this.get_access_token();
               const courseResponse = await helper.do_request({
                 method: 'GET',
                 url: `${DOCEBO_BASE_URL}/learn/v1/enrollments/${course_id}/${payload.user_id}`,
