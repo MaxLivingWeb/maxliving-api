@@ -17,7 +17,7 @@ class bridgeHandler {
     this.updateStatus = (arg1, arg2) => statusHandler.updateStatus(arg1, arg2);
   }
 
-  handle_workflow_contact_active(payload) {
+  handle_workflow_contact_active (payload) {
     return new Promise(async (resolve, reject) => {
       try {
         const user_create_response = await doceboHandler.user_create_from_hubspot({
@@ -31,6 +31,21 @@ class bridgeHandler {
           owner_email: helper.getSafe(() => payload['associated-owner'].email),
         });
         resolve(user_create_response);
+      } catch(e) {
+        reject(e);
+      }
+    });
+  }
+
+  docebo_course_enrollment_completed (payload) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        let resolveData = null;
+        const certificateID = await doceboHandler.getCertificateID(payload.payload);
+        if (certificateID) {
+          resolveData = await hubspotHandler.updateCertificates(payload.payload.user_id, certificateID, payload.payload.completion_date);
+        }
+        resolve(resolveData);
       } catch(e) {
         reject(e);
       }

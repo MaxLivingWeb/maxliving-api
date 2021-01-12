@@ -5,6 +5,7 @@ const {
   DOCEBO_PASSWORD,
   DOCEBO_ADMIN_USERNAME,
   DOCEBO_ADMIN_PASSWORD,
+  DOCEBO_CERTIFICATES,
 } = require('./config');
 const helper = require('../lib/helper');
 
@@ -362,7 +363,7 @@ class doceboHandler {
 
         const response = await helper.do_request({
           method: 'GET',
-          url: `${DOCEBO_BASE_URL}/manage/v1/user?search_text=${encodeURIComponent(search_text)}` ,
+          url: `${DOCEBO_BASE_URL}/manage/v1/user?search_text=${encodeURIComponent(search_text)}`,
           headers: {
             'Authorization': 'Bearer ' + access_token,
             'Content-Type': 'application/json',
@@ -389,7 +390,7 @@ class doceboHandler {
 
         const response = await helper.do_request({
           method: 'GET',
-          url: `${DOCEBO_BASE_URL}/manage/v1/managers` ,
+          url: `${DOCEBO_BASE_URL}/manage/v1/managers`,
           headers: {
             'Authorization': 'Bearer ' + access_token,
             'Content-Type': 'application/json',
@@ -401,6 +402,55 @@ class doceboHandler {
         });
 
         return resolve(response);
+      } catch(e) {
+        reject(e);
+      }
+    });
+  }
+
+  getCertificateID (payload) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const certData = DOCEBO_CERTIFICATES.split(';').find(item => item.split(':')[1].split(',').includes(payload.course_id + ''));
+
+        if (!certData) {
+          return resolve(null);
+        }
+
+        const [cert_id, courses_list] = certData.split(':');
+        const course_ids = courses_list.split(',');
+
+        const certResult = await Promise.all(
+          course_ids.map(course_id => new Promise(async (resolve, reject) => {
+            if (course_id == payload.course_id) {
+              return resolve(true);
+            }
+
+            try {
+              const tokenResponse =  await this.get_access_token();
+              const courseResponse = await helper.do_request({
+                method: 'GET',
+                url: `${DOCEBO_BASE_URL}/learn/v1/enrollments/${course_id}/${payload.user_id}`,
+                headers: {
+                  'Authorization': 'Bearer ' + tokenResponse.access_token,
+                  'Content-Type': 'application/json',
+                },
+              });
+              if (courseResponse.course_complete_date) {
+                return resolve(true);
+              }
+              resolve(false);
+            } catch(e) {
+              resolve(false);
+            }
+          }))
+        );
+
+        if (certResult.every(r => r)) { // all courses completed
+          return resolve(cert_id);
+        }
+
+        resolve(null);
       } catch(e) {
         reject(e);
       }

@@ -221,6 +221,37 @@ class hubspotHandler {
     })
   }
 
+  updateCertificates (docebo_user_id, certificateID, completion_date) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const searchResponse = await helper.do_request({
+          method: 'POST',
+          url: 'https://api.hubapi.com/crm/v3/objects/contacts/search',
+          qs: {hapikey: HUBSPOT_API_KEY},
+          headers: {accept: 'application/json', 'content-type': 'application/json'},
+          body: {
+            filterGroups: [{filters: [{value: docebo_user_id, propertyName: 'docebo_user_id', operator: 'EQ'}]}],
+            sorts: ['email'],
+            properties: ['email', 'id'],
+            limit: 1,
+            after: 0
+          },
+          json: true
+        });
+        if (searchResponse) {
+          const contactID = searchResponse.results[0].id;
+          const updateResponse = await this.updateContactByID(contactID, {
+            [`docebo_certificate_${certificateID}_issued_date`]: completion_date.slice(0, 10),
+          });
+          return resolve(updateResponse);
+        }
+        throw 'no docebo user found';
+      } catch(e) {
+        reject(e);
+      }
+    });
+  }
+
   async exchangeForTokens (userId, exchangeProof) {
     try {
       const responseBody = await request.post('https://api.hubapi.com/oauth/v1/token', {
