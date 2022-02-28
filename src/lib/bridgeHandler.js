@@ -36,7 +36,7 @@ class bridgeHandler {
           owner_email: helper.getSafe(() => payload['associated-owner'].email),
           dc_coach: helper.getSafe(() => payload.properties.dc_coach.value),
           dc_coaches_email: helper.getSafe(() => payload.properties.dc_coaches_email.value),
-          relationship_manager: helper.getSafe(() => payload.properties.relationship_manager.value),
+          // relationship_manager: helper.getSafe(() => payload.properties.relationship_manager.value),
           lms_profile: helper.getSafe(() => payload.properties.lms_profile.value),
         });
         resolve(user_create_response);

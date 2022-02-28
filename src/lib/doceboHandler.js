@@ -92,7 +92,7 @@ class doceboHandler {
     owner_email,
     dc_coach,
     dc_coaches_email,
-    relationship_manager,
+    // relationship_manager,
     lms_profile,
   }) {
     return new Promise(async (resolve, reject) => {
@@ -169,10 +169,10 @@ class doceboHandler {
         if (dc_coaches_email_field) {
           params.additional_fields[dc_coaches_email_field.id] = dc_coaches_email;
         }
-        const relationship_manager_field = userFieldsResponse.data.items.find(field => field.title == 'Relationship Manager');
-        if (relationship_manager_field) {
-          params.additional_fields[relationship_manager_field.id] = relationship_manager;
-        }
+        // const relationship_manager_field = userFieldsResponse.data.items.find(field => field.title == 'Relationship Manager');
+        // if (relationship_manager_field) {
+        //   params.additional_fields[relationship_manager_field.id] = relationship_manager;
+        // }
         const lms_profile_field = userFieldsResponse.data.items.find(field => field.title == 'LMS Profile');
         if (lms_profile_field) {
           const fieldResponse = await this.get_field_info(lms_profile_field.id, tokenResponse.access_token);
@@ -260,7 +260,7 @@ class doceboHandler {
     owner_email,
     dc_coach,
     dc_coaches_email,
-    relationship_manager,
+    // relationship_manager,
     lms_profile,
   }) {
     return new Promise(async (resolve, reject) => {
@@ -331,10 +331,10 @@ class doceboHandler {
         if (dc_coaches_email_field) {
           params.additional_fields[dc_coaches_email_field.id] = dc_coaches_email;
         }
-        const relationship_manager_field = userFieldsResponse.data.items.find(field => field.title == 'Relationship Manager');
-        if (relationship_manager_field) {
-          params.additional_fields[relationship_manager_field.id] = relationship_manager;
-        }
+        // const relationship_manager_field = userFieldsResponse.data.items.find(field => field.title == 'Relationship Manager');
+        // if (relationship_manager_field) {
+        //   params.additional_fields[relationship_manager_field.id] = relationship_manager;
+        // }
         const lms_profile_field = userFieldsResponse.data.items.find(field => field.title == 'LMS Profile');
         if (lms_profile_field) {
           const fieldResponse = await this.get_field_info(lms_profile_field.id, tokenResponse.access_token);
