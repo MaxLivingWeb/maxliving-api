@@ -138,7 +138,6 @@ class hubspotHandler {
             console.log('event payload and contact response mismatch', event.propertyName, event.propertyValue, contactResponse.properties[event.propertyName]);
           }
           const owners = await this.getOwners();
-          console.log(contactResponse);
           resolveData = await doceboHandler.update_user(contactResponse.properties.docebo_user_id, {
             first_name: helper.getSafe(() => contactResponse.properties.firstname),
             last_name: helper.getSafe(() => contactResponse.properties.lastname),
