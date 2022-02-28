@@ -338,8 +338,6 @@ class doceboHandler {
           }
         }
 
-        console.log(params);
-
         const userUpdateResponse = await helper.do_request({
           method: 'PUT',
           url: `${DOCEBO_BASE_URL}/manage/v1/user/${user_id}`,
