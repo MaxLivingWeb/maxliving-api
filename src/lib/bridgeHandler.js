@@ -26,11 +26,17 @@ class bridgeHandler {
           email: helper.getSafe(() => payload.properties.email.value),
           first_name: helper.getSafe(() => payload.properties.firstname.value),
           last_name: helper.getSafe(() => payload.properties.lastname.value),
+          phone: helper.getSafe(() => payload.properties.phone.value),
+          mobilephone: helper.getSafe(() => payload.properties.mobilephone.value),
+          company: helper.getSafe(() => payload.properties.company.value),
           type: helper.getSafe(() => payload.properties.type.value),
           contact_type: helper.getSafe(() => payload.properties.contact_type_salesforce.value),
           contact_subtypes: helper.getSafe(() => payload.properties.contact_subtype_cloned_.value.split(';')),
           coach_name: helper.getSafe(() => payload.properties.dc_coach.value || payload.properties.ca_coach.value),
           owner_email: helper.getSafe(() => payload['associated-owner'].email),
+          dc_coach: helper.getSafe(() => payload.properties.dc_coach.value),
+          dc_coaches_email: helper.getSafe(() => payload.properties.dc_coaches_email.value),
+          relationship_manager: helper.getSafe(() => payload.properties.relationship_manager.value),
         });
         resolve(user_create_response);
       } catch(e) {

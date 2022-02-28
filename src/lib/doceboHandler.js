@@ -78,7 +78,22 @@ class doceboHandler {
     });
   }
 
-  user_create_from_hubspot ({email, first_name, last_name, type, contact_type, contact_subtypes, coach_name, owner_email}) {
+  user_create_from_hubspot ({
+    email,
+    first_name,
+    last_name,
+    phone,
+    mobilephone,
+    company,
+    type,
+    contact_type,
+    contact_subtypes,
+    coach_name,
+    owner_email,
+    dc_coach,
+    dc_coaches_email,
+    relationship_manager,
+  }) {
     return new Promise(async (resolve, reject) => {
       try {
         const tokenResponse = await this.get_access_token();
@@ -105,6 +120,18 @@ class doceboHandler {
         }
 
         const userFieldsResponse = await this.get_userfields(tokenResponse.access_token);
+        const phone_field = userFieldsResponse.data.items.find(field => field.title == 'Office Phone Number');
+        if (phone_field) {
+          params.additional_fields[phone_field.id] = phone;
+        }
+        const mobilephone_field = userFieldsResponse.data.items.find(field => field.title == 'Mobile Phone Number');
+        if (mobilephone_field) {
+          params.additional_fields[mobilephone_field.id] = mobilephone;
+        }
+        const company_field = userFieldsResponse.data.items.find(field => field.title == 'Company');
+        if (company_field) {
+          params.additional_fields[company_field.id] = company;
+        }
         const contact_subtype_field = userFieldsResponse.data.items.find(field => field.title == 'Contact Subtype');
         if (contact_subtype_field) {
           const fieldResponse = await this.get_field_info(contact_subtype_field.id, tokenResponse.access_token);
@@ -120,6 +147,22 @@ class doceboHandler {
           if (dropdownOption) {
             params.additional_fields[suffix_field.id] = dropdownOption.option_id;
           }
+        }
+        const dc_coach_field = userFieldsResponse.data.items.find(field => field.title == 'DC Coach');
+        if (dc_coach_field) {
+          const fieldResponse = await this.get_field_info(dc_coach_field.id, tokenResponse.access_token);
+          const dropdownOption = fieldResponse.data.dropdown_options.find(option => option.translations.english == dc_coach);
+          if (dropdownOption) {
+            params.additional_fields[dc_coach_field.id] = dropdownOption.option_id;
+          }
+        }
+        const dc_coaches_email_field = userFieldsResponse.data.items.find(field => field.title == 'DC Coaches Email');
+        if (dc_coaches_email_field) {
+          params.additional_fields[dc_coaches_email_field.id] = dc_coaches_email;
+        }
+        const relationship_manager_field = userFieldsResponse.data.items.find(field => field.title == 'Relationship Manager');
+        if (relationship_manager_field) {
+          params.additional_fields[relationship_manager_field.id] = relationship_manager;
         }
 
         const managersResponse = await this.get_managers(tokenResponse.access_token);
@@ -187,7 +230,21 @@ class doceboHandler {
     });
   }
 
-  update_user (user_id, {first_name, last_name, type, contact_type, contact_subtypes, coach_name, owner_email}) {
+  update_user (user_id, {
+    first_name,
+    last_name,
+    phone,
+    mobilephone,
+    company,
+    type,
+    contact_type,
+    contact_subtypes,
+    coach_name,
+    owner_email,
+    dc_coach,
+    dc_coaches_email,
+    relationship_manager,
+  }) {
     return new Promise(async (resolve, reject) => {
       try {
         const tokenResponse = await this.get_access_token();
@@ -208,6 +265,18 @@ class doceboHandler {
         }
 
         const userFieldsResponse = await this.get_userfields(tokenResponse.access_token);
+        const phone_field = userFieldsResponse.data.items.find(field => field.title == 'Office Phone Number');
+        if (phone_field) {
+          params.additional_fields[phone_field.id] = phone;
+        }
+        const mobilephone_field = userFieldsResponse.data.items.find(field => field.title == 'Mobile Phone Number');
+        if (mobilephone_field) {
+          params.additional_fields[mobilephone_field.id] = mobilephone;
+        }
+        const company_field = userFieldsResponse.data.items.find(field => field.title == 'Company');
+        if (company_field) {
+          params.additional_fields[company_field.id] = company;
+        }
         const contact_subtype_field = userFieldsResponse.data.items.find(field => field.title == 'Contact Subtype');
         if (contact_subtype_field) {
           const fieldResponse = await this.get_field_info(contact_subtype_field.id, tokenResponse.access_token);
@@ -223,6 +292,22 @@ class doceboHandler {
           if (dropdownOption) {
             params.additional_fields[suffix_field.id] = dropdownOption.option_id;
           }
+        }
+        const dc_coach_field = userFieldsResponse.data.items.find(field => field.title == 'DC Coach');
+        if (dc_coach_field) {
+          const fieldResponse = await this.get_field_info(dc_coach_field.id, tokenResponse.access_token);
+          const dropdownOption = fieldResponse.data.dropdown_options.find(option => option.translations.english == dc_coach);
+          if (dropdownOption) {
+            params.additional_fields[dc_coach_field.id] = dropdownOption.option_id;
+          }
+        }
+        const dc_coaches_email_field = userFieldsResponse.data.items.find(field => field.title == 'DC Coaches Email');
+        if (dc_coaches_email_field) {
+          params.additional_fields[dc_coaches_email_field.id] = dc_coaches_email;
+        }
+        const relationship_manager_field = userFieldsResponse.data.items.find(field => field.title == 'Relationship Manager');
+        if (relationship_manager_field) {
+          params.additional_fields[relationship_manager_field.id] = relationship_manager;
         }
 
         const managersResponse = await this.get_managers(tokenResponse.access_token);
