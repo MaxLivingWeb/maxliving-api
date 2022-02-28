@@ -87,17 +87,17 @@ class hubspotHandler {
           email: helper.getSafe(() => contactResponse.properties.email),
           first_name: helper.getSafe(() => contactResponse.properties.firstname),
           last_name: helper.getSafe(() => contactResponse.properties.lastname),
-          phone: helper.getSafe(() => payload.properties.phone.value),
-          mobilephone: helper.getSafe(() => payload.properties.mobilephone.value),
-          company: helper.getSafe(() => payload.properties.company.value),
+          phone: helper.getSafe(() => contactResponse.properties.phone),
+          mobilephone: helper.getSafe(() => contactResponse.properties.mobilephone),
+          company: helper.getSafe(() => contactResponse.properties.company),
           type: helper.getSafe(() => contactResponse.properties.type),
           contact_type: helper.getSafe(() => contactResponse.properties.contact_type_salesforce),
           contact_subtypes: helper.getSafe(() => contactResponse.properties.contact_subtype_cloned_.split(';')),
           coach_name: helper.getSafe(() => contactResponse.properties.dc_coach || contactResponse.properties.ca_coach),
           owner_email: helper.getSafe(() => owners.find(owner => owner.ownerId == contactResponse.properties.hubspot_owner_id).email),
-          dc_coach: helper.getSafe(() => payload.properties.dc_coach.value),
-          dc_coaches_email: helper.getSafe(() => payload.properties.dc_coaches_email.value),
-          relationship_manager: helper.getSafe(() => payload.properties.relationship_manager.value),
+          dc_coach: helper.getSafe(() => contactResponse.properties.dc_coach),
+          dc_coaches_email: helper.getSafe(() => contactResponse.properties.dc_coaches_email),
+          relationship_manager: helper.getSafe(() => contactResponse.properties.relationship_manager),
         });
 
         const docebo_user_id = helper.getSafe(() => user_create_response.result.data.user_id);
@@ -138,20 +138,21 @@ class hubspotHandler {
             console.log('event payload and contact response mismatch', event.propertyName, event.propertyValue, contactResponse.properties[event.propertyName]);
           }
           const owners = await this.getOwners();
+          console.log(contactResponse);
           resolveData = await doceboHandler.update_user(contactResponse.properties.docebo_user_id, {
             first_name: helper.getSafe(() => contactResponse.properties.firstname),
             last_name: helper.getSafe(() => contactResponse.properties.lastname),
-            phone: helper.getSafe(() => payload.properties.phone.value),
-            mobilephone: helper.getSafe(() => payload.properties.mobilephone.value),
-            company: helper.getSafe(() => payload.properties.company.value),
+            phone: helper.getSafe(() => contactResponse.properties.phone),
+            mobilephone: helper.getSafe(() => contactResponse.properties.mobilephone),
+            company: helper.getSafe(() => contactResponse.properties.company),
             type: helper.getSafe(() => contactResponse.properties.type),
             contact_type: helper.getSafe(() => contactResponse.properties.contact_type_salesforce),
             contact_subtypes: helper.getSafe(() => contactResponse.properties.contact_subtype_cloned_.split(';')),
             coach_name: helper.getSafe(() => contactResponse.properties.dc_coach || contactResponse.properties.ca_coach),
             owner_email: helper.getSafe(() => owners.find(owner => owner.ownerId == contactResponse.properties.hubspot_owner_id).email),
-            dc_coach: helper.getSafe(() => payload.properties.dc_coach.value),
-            dc_coaches_email: helper.getSafe(() => payload.properties.dc_coaches_email.value),
-            relationship_manager: helper.getSafe(() => payload.properties.relationship_manager.value),
+            dc_coach: helper.getSafe(() => contactResponse.properties.dc_coach),
+            dc_coaches_email: helper.getSafe(() => contactResponse.properties.dc_coaches_email),
+            relationship_manager: helper.getSafe(() => contactResponse.properties.relationship_manager),
           });
         }
         resolve(resolveData);
