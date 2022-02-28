@@ -87,11 +87,17 @@ class hubspotHandler {
           email: helper.getSafe(() => contactResponse.properties.email),
           first_name: helper.getSafe(() => contactResponse.properties.firstname),
           last_name: helper.getSafe(() => contactResponse.properties.lastname),
+          phone: helper.getSafe(() => payload.properties.phone.value),
+          mobilephone: helper.getSafe(() => payload.properties.mobilephone.value),
+          company: helper.getSafe(() => payload.properties.company.value),
           type: helper.getSafe(() => contactResponse.properties.type),
           contact_type: helper.getSafe(() => contactResponse.properties.contact_type_salesforce),
           contact_subtypes: helper.getSafe(() => contactResponse.properties.contact_subtype_cloned_.split(';')),
           coach_name: helper.getSafe(() => contactResponse.properties.dc_coach || contactResponse.properties.ca_coach),
           owner_email: helper.getSafe(() => owners.find(owner => owner.ownerId == contactResponse.properties.hubspot_owner_id).email),
+          dc_coach: helper.getSafe(() => payload.properties.dc_coach.value),
+          dc_coaches_email: helper.getSafe(() => payload.properties.dc_coaches_email.value),
+          relationship_manager: helper.getSafe(() => payload.properties.relationship_manager.value),
         });
 
         const docebo_user_id = helper.getSafe(() => user_create_response.result.data.user_id);
@@ -135,11 +141,17 @@ class hubspotHandler {
           resolveData = await doceboHandler.update_user(contactResponse.properties.docebo_user_id, {
             first_name: helper.getSafe(() => contactResponse.properties.firstname),
             last_name: helper.getSafe(() => contactResponse.properties.lastname),
+            phone: helper.getSafe(() => payload.properties.phone.value),
+            mobilephone: helper.getSafe(() => payload.properties.mobilephone.value),
+            company: helper.getSafe(() => payload.properties.company.value),
             type: helper.getSafe(() => contactResponse.properties.type),
             contact_type: helper.getSafe(() => contactResponse.properties.contact_type_salesforce),
             contact_subtypes: helper.getSafe(() => contactResponse.properties.contact_subtype_cloned_.split(';')),
             coach_name: helper.getSafe(() => contactResponse.properties.dc_coach || contactResponse.properties.ca_coach),
             owner_email: helper.getSafe(() => owners.find(owner => owner.ownerId == contactResponse.properties.hubspot_owner_id).email),
+            dc_coach: helper.getSafe(() => payload.properties.dc_coach.value),
+            dc_coaches_email: helper.getSafe(() => payload.properties.dc_coaches_email.value),
+            relationship_manager: helper.getSafe(() => payload.properties.relationship_manager.value),
           });
         }
         resolve(resolveData);

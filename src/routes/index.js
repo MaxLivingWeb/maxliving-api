@@ -3,6 +3,8 @@ var router = express.Router();
 
 const {
   cronHandler,
+  hubspotHandler,
+  doceboHandler,
 } = require('../lib/handler');
 
 /* GET home page. */
@@ -17,7 +19,7 @@ router.get('/test', async (req, res) => {
   try {
     responseData.data = await (() => new Promise(async (resolve, reject) => {
       try {
-        resolve();
+        resolve(await doceboHandler.get_userfields());
       } catch(e) {
         console.log(e)
         reject(e)
