@@ -93,6 +93,7 @@ class doceboHandler {
     dc_coach,
     dc_coaches_email,
     relationship_manager,
+    lms_profile,
   }) {
     return new Promise(async (resolve, reject) => {
       try {
@@ -148,6 +149,14 @@ class doceboHandler {
             params.additional_fields[suffix_field.id] = dropdownOption.option_id;
           }
         }
+        const type_field = userFieldsResponse.data.items.find(field => field.title == 'Type');
+        if (type_field) {
+          const fieldResponse = await this.get_field_info(type_field.id, tokenResponse.access_token);
+          const dropdownOption = fieldResponse.data.dropdown_options.find(option => option.translations.english == type);
+          if (dropdownOption) {
+            params.additional_fields[type_field.id] = dropdownOption.option_id;
+          }
+        }
         const dc_coach_field = userFieldsResponse.data.items.find(field => field.title == 'DC Coach');
         if (dc_coach_field) {
           const fieldResponse = await this.get_field_info(dc_coach_field.id, tokenResponse.access_token);
@@ -163,6 +172,14 @@ class doceboHandler {
         const relationship_manager_field = userFieldsResponse.data.items.find(field => field.title == 'Relationship Manager');
         if (relationship_manager_field) {
           params.additional_fields[relationship_manager_field.id] = relationship_manager;
+        }
+        const lms_profile_field = userFieldsResponse.data.items.find(field => field.title == 'LMS Profile');
+        if (lms_profile_field) {
+          const fieldResponse = await this.get_field_info(lms_profile_field.id, tokenResponse.access_token);
+          const dropdownOption = fieldResponse.data.dropdown_options.find(option => option.translations.english == lms_profile);
+          if (dropdownOption) {
+            params.additional_fields[lms_profile_field.id] = dropdownOption.option_id;
+          }
         }
 
         const managersResponse = await this.get_managers(tokenResponse.access_token);
@@ -244,6 +261,7 @@ class doceboHandler {
     dc_coach,
     dc_coaches_email,
     relationship_manager,
+    lms_profile,
   }) {
     return new Promise(async (resolve, reject) => {
       try {
@@ -293,6 +311,14 @@ class doceboHandler {
             params.additional_fields[suffix_field.id] = dropdownOption.option_id;
           }
         }
+        const type_field = userFieldsResponse.data.items.find(field => field.title == 'Type');
+        if (type_field) {
+          const fieldResponse = await this.get_field_info(type_field.id, tokenResponse.access_token);
+          const dropdownOption = fieldResponse.data.dropdown_options.find(option => option.translations.english == type);
+          if (dropdownOption) {
+            params.additional_fields[type_field.id] = dropdownOption.option_id;
+          }
+        }
         const dc_coach_field = userFieldsResponse.data.items.find(field => field.title == 'DC Coach');
         if (dc_coach_field) {
           const fieldResponse = await this.get_field_info(dc_coach_field.id, tokenResponse.access_token);
@@ -308,6 +334,14 @@ class doceboHandler {
         const relationship_manager_field = userFieldsResponse.data.items.find(field => field.title == 'Relationship Manager');
         if (relationship_manager_field) {
           params.additional_fields[relationship_manager_field.id] = relationship_manager;
+        }
+        const lms_profile_field = userFieldsResponse.data.items.find(field => field.title == 'LMS Profile');
+        if (lms_profile_field) {
+          const fieldResponse = await this.get_field_info(lms_profile_field.id, tokenResponse.access_token);
+          const dropdownOption = fieldResponse.data.dropdown_options.find(option => option.translations.english == lms_profile);
+          if (dropdownOption) {
+            params.additional_fields[lms_profile_field.id] = dropdownOption.option_id;
+          }
         }
 
         const managersResponse = await this.get_managers(tokenResponse.access_token);

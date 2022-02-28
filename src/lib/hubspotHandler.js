@@ -37,6 +37,7 @@ class hubspotHandler {
       'dc_coach',
       'dc_coaches_email',
       'relationship_manager',
+      'lms_profile',
       'ca_coach',
       'hubspot_owner_id',
       'docebo_user_id',
@@ -61,6 +62,7 @@ class hubspotHandler {
           dc_coach: helper.getSafe(() => payload.properties.dc_coach.value),
           dc_coaches_email: helper.getSafe(() => payload.properties.dc_coaches_email.value),
           relationship_manager: helper.getSafe(() => payload.properties.relationship_manager.value),
+          lms_profile: helper.getSafe(() => payload.properties.lms_profile.value),
         });
         resolve(user_create_response);
       } catch(e) {
@@ -98,6 +100,7 @@ class hubspotHandler {
           dc_coach: helper.getSafe(() => contactResponse.properties.dc_coach),
           dc_coaches_email: helper.getSafe(() => contactResponse.properties.dc_coaches_email),
           relationship_manager: helper.getSafe(() => contactResponse.properties.relationship_manager),
+          lms_profile: helper.getSafe(() => contactResponse.properties.lms_profile),
         });
 
         const docebo_user_id = helper.getSafe(() => user_create_response.result.data.user_id);
@@ -152,6 +155,7 @@ class hubspotHandler {
             dc_coach: helper.getSafe(() => contactResponse.properties.dc_coach),
             dc_coaches_email: helper.getSafe(() => contactResponse.properties.dc_coaches_email),
             relationship_manager: helper.getSafe(() => contactResponse.properties.relationship_manager),
+            lms_profile: helper.getSafe(() => contactResponse.properties.lms_profile),
           });
         }
         resolve(resolveData);
