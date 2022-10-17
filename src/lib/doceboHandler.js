@@ -555,7 +555,7 @@ class doceboHandler {
                   'Content-Type': 'application/json',
                 },
               });
-              if (courseResponse.course_complete_date) {
+              if (courseResponse.course_complete_date || (courseResponse.data && courseResponse.data.records && courseResponse.data.records.course_complete_date)) {
                 return resolve(true);
               }
               resolve(false);
