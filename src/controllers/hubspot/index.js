@@ -28,7 +28,7 @@ exports.oauth_callback = async (req, res, next) => {
     // Step 4
     // Exchange the authorization code for an access token and refresh token
     console.log('===> Step 4: Exchanging authorization code for an access token and refresh token');
-    const token = await hubspotHandler.exchangeForTokens(req.sessionID, authCodeProof);
+    const token = await hubspotHandler.exchangeForTokens('hubspot', authCodeProof);
     if (token.message) {
       return next(createError(500, token.message));
     }

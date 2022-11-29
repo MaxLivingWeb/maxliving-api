@@ -1,5 +1,5 @@
 const {
-  HUBSPOT_API_KEY,
+  // HUBSPOT_API_KEY,
   DOCEBO_BASE_URL,
 } = require('./config');
 const helper = require('./helper');
@@ -89,8 +89,12 @@ class bridgeHandler {
           const batchReadResponse = await helper.do_request({
             method: 'POST',
             url: 'https://api.hubapi.com/crm/v3/objects/contacts/batch/read',
-            qs: {hapikey: HUBSPOT_API_KEY},
-            headers: {accept: 'application/json', 'content-type': 'application/json'},
+            // qs: {hapikey: HUBSPOT_API_KEY},
+            headers: {
+              'Authorization': `Bearer ${await hubspotHandler.getAccessToken()}`,
+              'Content-Type': 'application/json',
+              accept: 'application/json',
+            },
             body: {
               inputs: response.data.items.map(item => ({id: item.email})),
               properties: ['email'],
@@ -104,7 +108,12 @@ class bridgeHandler {
           const batchUpdateResponse = await helper.do_request({
             method: 'POST',
             url: 'https://api.hubapi.com/crm/v3/objects/contacts/batch/update',
-            qs: {hapikey: HUBSPOT_API_KEY},
+            // qs: {hapikey: HUBSPOT_API_KEY},
+            headers: {
+              'Authorization': `Bearer ${await hubspotHandler.getAccessToken()}`,
+              'Content-Type': 'application/json',
+              accept: 'application/json',
+            },
             headers: {accept: 'application/json', 'content-type': 'application/json'},
             body: {
               inputs: response.data.items.map(item => ({

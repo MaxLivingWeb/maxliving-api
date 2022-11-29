@@ -1,5 +1,5 @@
 const {
-  HUBSPOT_API_KEY,
+  // HUBSPOT_API_KEY,
   HUBSPOT_CLIENT_ID,
   HUBSPOT_CLIENT_SECRET,
   HUBSPOT_REDIRECT_URI
@@ -191,9 +191,11 @@ class hubspotHandler {
             url: `https://api.hubapi.com/crm/v3/objects/contacts/${contactID}`,
             qs: {
               properties: this.properties.join(','),
-              hapikey: HUBSPOT_API_KEY,
+              // hapikey: HUBSPOT_API_KEY,
             },
             headers: {
+              'Authorization': `Bearer ${await this.getAccessToken()}`,
+              'Content-Type': 'application/json',
               accept: 'application/json',
             },
           })
@@ -211,10 +213,14 @@ class hubspotHandler {
           await helper.do_request({
             method: 'PATCH',
             url: `https://api.hubapi.com/crm/v3/objects/contacts/${contactID}`,
-            qs: {
-              hapikey: HUBSPOT_API_KEY,
+            // qs: {
+            //   hapikey: HUBSPOT_API_KEY,
+            // },
+            headers: {
+              'Authorization': `Bearer ${await this.getAccessToken()}`,
+              'Content-Type': 'application/json',
+              accept: 'application/json',
             },
-            headers: {accept: 'application/json', 'content-type': 'application/json'},
             body: {
               properties: data,
             },
@@ -234,8 +240,13 @@ class hubspotHandler {
           await helper.do_request({
             method: 'GET',
             url: `https://api.hubapi.com/owners/v2/owners`,
-            qs: {
-              hapikey: HUBSPOT_API_KEY,
+            // qs: {
+            //   hapikey: HUBSPOT_API_KEY,
+            // },
+            headers: {
+              'Authorization': `Bearer ${await this.getAccessToken()}`,
+              'Content-Type': 'application/json',
+              accept: 'application/json',
             },
             cache: {
               key: 'hubspot_owners',
@@ -254,8 +265,12 @@ class hubspotHandler {
         const searchResponse = await helper.do_request({
           method: 'POST',
           url: 'https://api.hubapi.com/crm/v3/objects/contacts/search',
-          qs: {hapikey: HUBSPOT_API_KEY},
-          headers: {accept: 'application/json', 'content-type': 'application/json'},
+          // qs: {hapikey: HUBSPOT_API_KEY},
+          headers: {
+            'Authorization': `Bearer ${await this.getAccessToken()}`,
+            'Content-Type': 'application/json',
+            accept: 'application/json',
+          },
           body: {
             filterGroups: [{filters: [{value: docebo_user_id, propertyName: 'docebo_user_id', operator: 'EQ'}]}],
             sorts: ['email'],
@@ -287,6 +302,8 @@ class hubspotHandler {
       // Usually, this token data should be persisted in a database and associated with
       // a user identity.
       const tokens = JSON.parse(responseBody);
+      await this.updateStatus('tokens', tokens);
+
       refreshTokenStore[userId] = tokens.refresh_token;
       accessTokenCache.set(userId, tokens.access_token, Math.round(tokens.expires_in * 0.75));
 
@@ -299,17 +316,22 @@ class hubspotHandler {
   }
 
   async refreshAccessToken (userId) {
+    const tokens = await this.getStatus('tokens');
+    if (!tokens || !tokens.access_token) {
+      throw 'No active token available';
+    }
+
     const refreshTokenProof = {
       grant_type: 'refresh_token',
       client_id: HUBSPOT_CLIENT_ID,
       client_secret: HUBSPOT_CLIENT_SECRET,
       redirect_uri: HUBSPOT_REDIRECT_URI,
-      refresh_token: refreshTokenStore[userId]
+      refresh_token: refreshTokenStore[userId] || tokens.refresh_token,
     };
     return await this.exchangeForTokens(userId, refreshTokenProof);
   }
 
-  async getAccessToken (userId) {
+  async getAccessToken (userId = 'hubspot') {
     // If the access token has expired, retrieve
     // a new one using the refresh token
     if (!accessTokenCache.get(userId)) {
@@ -317,10 +339,6 @@ class hubspotHandler {
       await this.refreshAccessToken(userId);
     }
     return accessTokenCache.get(userId);
-  }
-
-  isAuthorized (userId) {
-    return refreshTokenStore[userId] ? true : false;
   }
 
 };
